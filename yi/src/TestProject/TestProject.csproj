@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+       
+<!--        TEMP TABLES DROPPED OK-->
+<!--        <PackageReference Include="EFCore.BulkExtensions" Version="6.5.6" />-->
+<!--        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />-->
+        
+        <!--        temp tables NOT dropped        -->
+        <PackageReference Include="EFCore.BulkExtensions" Version="6.6.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.11" />
+
+        
+        <PackageReference Include="CsvHelper" Version="28.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+<!--        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="2.0.0-preview1" />-->
+        <PackageReference Include="NUnit" Version="3.13.3" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+        <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
+        <PackageReference Include="coverlet.collector" Version="3.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Common\Common.csproj" />
+    </ItemGroup>
+
+<!--    <PropertyGroup>-->
+<!--        <GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>-->
+<!--    </PropertyGroup>-->
+</Project>
