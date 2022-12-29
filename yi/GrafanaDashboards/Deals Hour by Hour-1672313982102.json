@@ -1,0 +1,194 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 12,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "c4729dfb8ceeaa0372ef27403a3932695eee995d"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "log": 10,
+              "type": "log"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "c4729dfb8ceeaa0372ef27403a3932695eee995d"
+          },
+          "format": "time_series",
+          "group": [],
+          "key": "Q-d0057385-277d-4b8e-84a4-87e54210ab0a-0",
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select extract(hour from hour::timestamp) AS time, avg(\"sum\") from (\r\nSELECT time_bucket('1 hours', \"time\") AS \"hour\",\r\n             sum(value)                        AS \"sum\"\r\n      FROM \"Nominal\"\r\n      WHERE \"time\" > now() - INTERVAL '1 days'\r\n      group by \"time\"\r\n      order by \"time\") t\r\ngroup by time\r\norder by time;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"ALERTS\"",
+          "timeColumn": "\"time\"",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "c4729dfb8ceeaa0372ef27403a3932695eee995d"
+          },
+          "format": "time_series",
+          "group": [],
+          "key": "Q-530d1b32-d296-483d-91e5-1ea4ef617bdb-1",
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select extract(hour from hour::timestamp) AS time, avg(\"sum\") AS last_15d from (\r\nSELECT time_bucket('1 hours', \"time\") AS \"hour\",\r\n             sum(value)                        AS \"sum\"\r\n      FROM \"Nominal\"\r\n      WHERE \"time\" > now() - INTERVAL '15 days'\r\n      AND \"time\" < now() - INTERVAL '1 days'\r\n      group by \"time\"\r\n      order by \"time\") t\r\ngroup by time\r\norder by time;",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"ALERTS\"",
+          "timeColumn": "\"time\"",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Nominal hour by hour outlier",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "1970-01-01T00:00:00.000Z",
+    "to": "1970-01-01T00:00:00.023Z"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Deals Hour by Hour",
+  "uid": "0kQS1Tp4k",
+  "version": 9,
+  "weekStart": ""
+}
