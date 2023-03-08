@@ -6,6 +6,7 @@ package ingestor
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 	"sort"
@@ -13,8 +14,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/model"
 	"go.opentelemetry.io/otel/attribute"
@@ -227,8 +228,8 @@ func isPGUniqueViolation(err error) bool {
 	if err == nil {
 		return false
 	}
-	pgErr, ok := err.(*pgconn.PgError)
-	if ok && pgErr.Code == "23505" {
+	var e *pgconn.PgError
+	if errors.As(err, &e) && e.Code == "23505" {
 		return true
 	}
 	return false
@@ -425,10 +426,16 @@ func insertSeries(ctx context.Context, conn pgxconn.PgxConn, onConflict bool, re
 
 		copyFromFunc := func(tableName, schemaName string, isExemplar bool) error {
 			columns := schema.PromDataColumns
+			oids := schema.PromDataColumnsOIDs
 			tempTablePrefix := fmt.Sprintf("s%d_", req.info.MetricID)
 			rows := sampleRows
 			if isExemplar {
 				columns = schema.PromExemplarColumns
+				var ok bool
+				oids, ok = schema.PromExemplarColumnsOIDs(tx.Conn().TypeMap())
+				if !ok {
+					return errors.New("failed to get exemplar colums OID")
+				}
 				tempTablePrefix = fmt.Sprintf("e%d_", req.info.MetricID)
 				rows = exemplarRows
 			}
@@ -440,7 +447,14 @@ func insertSeries(ctx context.Context, conn pgxconn.PgxConn, onConflict bool, re
 					return err
 				}
 			}
-			inserted, err := tx.CopyFrom(ctx, table, columns, pgx.CopyFromRows(rows))
+			inserted, err := conn.CopyFrom(
+				ctx,
+				tx,
+				table,
+				columns,
+				pgx.CopyFromRows(rows),
+				oids,
+			)
 			if err != nil {
 				return err
 			}

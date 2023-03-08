@@ -15,7 +15,14 @@ We use the following categories for changes:
 
 ## Unreleased
 
+### Changed
+
+- COPY commands are executed in a single DB roundtrip instead of two [#1814]
+
+## [0.17.0] - 2023-09-01
+
 ### Added
+- Add support for PostgreSQL 15
 - Alerts from promscale monitoring mixin are groupped also by namespace label [#1714]
 - Added a new family of metrics tracking database maintenance jobs durations and failures [#1745]
 - Allow config options in file to be set as yaml mappings [#1737]
